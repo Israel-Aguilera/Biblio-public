@@ -1,0 +1,5 @@
+library (readr)
+
+urlfile="https://github.com/Israel-Aguilera/Biblio-public/blob/main/QFD-springer.csv"
+
+mydata<-read_csv(url(urlfile))
