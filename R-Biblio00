@@ -1,5 +1,175 @@
-library (readr)
+#library (readr)
+#urlfile="https://github.com/Israel-Aguilera/Biblio-public/blob/main/QFD-springer.csv"
+#mydata<-read_csv(url(urlfile))
 
-urlfile="https://github.com/Israel-Aguilera/Biblio-public/blob/main/QFD-springer.csv"
 
-mydata<-read_csv(url(urlfile))
+##Bibliometría
+
+install.packages("bib2df")
+
+install.packages ("tidyr")
+install.packages("MASS")  # package ‘MASS’ is not available (for R version 3.6.3)
+install.packages("reshape2")
+install.packages("reshape")
+install.packages("ggthemes")
+install.packages("extrafont")
+# install.packages("mgcv") # no se instala
+
+library(bib2df)
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(extrafont)
+library(readr)
+library(MASS) # no lo conoce
+library(reshape2)
+library(reshape)
+library(ggthemes)
+# library(mgcv) # no se instala
+
+df <- bib2df("/home/ian/Documentos/00-Proyectos/Curso-R/Demobiblio.bib", separate_names = TRUE)
+
+head(df$AUTHOR)
+
+df %>%
+  filter(!is.na(JOURNAL)) %>%
+  group_by(JOURNAL) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:3)
+
+
+Annual_S_P  <- readr::read_csv("Annual_Production.csv")
+ggplot(Annual_S_P, aes(x = Year, y = Articles)) +
+geom_point(alpha = 3/10) +
+geom_smooth(method = NULL)  +
+theme_minimal()
+
+Annual_S_P  <- readr::read_csv("Annual_Production.csv")
+ggplot(Annual_S_P, aes(x = Year, y = Articles)) +
+geom_point(alpha = 3/10) +
+geom_jitter(height=0,color = 'blue')
+theme_minimal()
+
+plot(x = Annual_S_P $Year, y = Annual_S_P $Articles)
+
+ggplot(Annual_S_P, aes(x = Year, y = Articles)) +
+geom_point(alpha = 3/10) +
+geom_line()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+library(readr)
+library(bib2df)
+library(plotly)
+library(readr)
+library(dplyr)
+
+splinkH01  <- readr::read_csv("/home/ian/Documentos/00-Productos/00-2023-Bibliometría/Hidrogeno-electrodo/BD-H01/springerlink_H01.csv")
+
+SDH01 <- bib2df("/home/ian/Documentos/00-Productos/00-2023-Bibliometría/Hidrogeno-electrodo/BD-H01/ScienceDirect_H01.bib")
+
+MDPIH01 <- bib2df("/home/ian/Documentos/00-Productos/00-2023-Bibliometría/Hidrogeno-electrodo/BD-H01/MDPI_H01.bib")
+
+AUTHORC <- MDPIH01$AUTHOR
+JOURNAL <- MDPIH01$JOURNAL
+TITLE <- MDPIH01$TITLE
+VOLUME <- MDPIH01$VOLUME
+YEAR <- MDPIH01$YEAR
+ABSTRACT <- MDPIH01$ABSTRACT
+DOI <- MDPIH01$DOI
+ISSN <- MDPIH01$ISSN
+AUTHORb <- data.frame(t(sapply(AUTHORC,c)))
+AUTHOR <- t(AUTHORb)
+
+MDPI_A = data.frame(TITLE, JOURNAL,YEAR, VOLUME, DOI, ISSN, ABSTRACT)
+MDPI_B = data.frame(AUTHOR, MDPI_A)
+
+AUTHORC <- SDH01$AUTHOR
+JOURNAL <- SDH01$JOURNAL
+TITLE <- SDH01$TITLE
+VOLUME <- SDH01$VOLUME
+YEAR <- SDH01$YEAR
+ABSTRACT <- SDH01$ABSTRACT
+DOI <- SDH01$DOI
+ISSN <- SDH01$ISSN
+AUTHORb <- data.frame(t(sapply(AUTHORC,c)))
+AUTHOR <- t(AUTHORb)
+
+SD_A = data.frame(TITLE, JOURNAL,YEAR, VOLUME, DOI, ISSN, ABSTRACT)
+SD_B = data.frame(AUTHOR, SD_A)
+
+SDMDPI <- rbind(SD_B, MDPI_B)
+
+
+
+
+
+colnames(splinkH01) <- c("TITLE", "JOURNAL", "Book Series Title", "VOLUME",  "Journal Issue" , "DOI" , "AUTHOR", "YEAR", "URL", "Content Type")
+
+AUTHORC <- splinkH01$AUTHOR
+JOURNAL <- splinkH01$JOURNAL
+TITLE <- splinkH01$TITLE
+VOLUME <- splinkH01$VOLUME
+YEAR <- splinkH01$YEAR
+DOI <- splinkH01$DOI
+AUTHORb <- data.frame(t(sapply(AUTHORC,c)))
+AUTHOR <- t(AUTHORb)
+
+splink_A = data.frame(TITLE, JOURNAL,YEAR, VOLUME, DOI)
+splink_B = data.frame(AUTHOR, SD_A)
+
+AUTHORC <- SDMDPI$AUTHOR
+JOURNAL <- SDMDPI$JOURNAL
+TITLE <- SDMDPI$TITLE
+VOLUME <- SDMDPI$VOLUME
+YEAR <- SDMDPI$YEAR
+DOI <- SDMDPI$DOI
+AUTHORb <- data.frame(t(sapply(AUTHORC,c)))
+AUTHOR <- t(AUTHORb)
+
+SDMDPI_A = data.frame(TITLE, JOURNAL,YEAR, VOLUME, DOI)
+SDMDPI_B = data.frame(AUTHOR, SD_A)
+
+SDMDPIsplink <- rbind(splink_B, SDMDPI_B)
